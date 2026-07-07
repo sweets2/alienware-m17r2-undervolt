@@ -1,0 +1,11 @@
+# Never commit firmware dumps or NVRAM dumps — they are machine-specific and may be identifying.
+bios.bin
+*.bin
+*.dump/
+nvram_raw.txt
+listing.txt
+hii.bin
+setup_patched*
+*.ifr.txt
+uefiextract*
+ifrextractor*
