@@ -9,3 +9,9 @@ setup_patched*
 *.ifr.txt
 uefiextract*
 ifrextractor*
+# generated click-to-test suite (machine-specific: embeds your Setup snapshot + GUID)
+Set-Undervolt-*.bat
+Reset-Undervolt.bat
+setup_*mv.bin
+setup_reset.bin
+*-log.txt

@@ -140,6 +140,29 @@ menu echo. ThrottleStop's own sliders stay locked/greyed — that's expected; **
   back off ~10–15 mV.
 - When settled: **turn Memory Integrity back ON.** The undervolt persists (it's firmware-applied).
 
+### Optional: build a whole "click-to-test" suite
+
+Stepping the undervolt by hand (edit `--mv`, rebuild, rewrite) gets tedious while tuning.
+`build_undervolt_set.sh` generates a set of one-click batch files — one per stepping — plus a
+matching `Reset-Undervolt.bat`. Each `.bat` **self-elevates** (prompts for UAC), writes its
+`setup_<mv>mv.bin` with SCEWIN, and tells you to reboot:
+
+```bash
+scripts/build_undervolt_set.sh nvram_raw.txt EC87D643-EBA4-4BB5-A1E5-3F3E36B20DA9 \
+    50 60 70 80 90 100 110 120 130 140 150
+# override offsets for a different BIOS:  CORE_ADDR=0x872 PREFIX_ADDR=0x874 ./build_undervolt_set.sh ...
+```
+
+Copy the resulting `setup_*.bin` + `Set-Undervolt-*.bat` + `Reset-Undervolt.bat` into your SCEWIN
+folder (next to `SCEWIN_64.exe` and `amifldrv64.sys`). Then tuning is just: **double-click a
+stepping → approve UAC → restart → verify in ThrottleStop → stress-test.** Every `.bat` changes
+only the one offset byte, so you can jump straight between steppings — e.g. try `150`, and if it's
+unstable click `130` — without resetting in between. If a value won't boot, recover with BIOS
+**F2 → Load Defaults (F9)**.
+
+> The generated `.bat`/`.bin` files embed your machine's Setup snapshot and offsets, so they are
+> **not committed here** (see `.gitignore`) — generate your own from your own `nvram_raw.txt`.
+
 ---
 
 ## Verified values — Alienware m17 R2, BIOS 1.24.0 (reference only)
